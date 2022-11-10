@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Models\Doctor;
 use App\Models\Reservation;
 use App\Models\Sick;
@@ -56,7 +57,13 @@ class ReservationController extends Controller
 
     public function get_one_reservation($id)
     {
-        $reservation = Reservation::with('doctor')->with('sick')->where('user_id', Auth::user()->id)->where('id', $id)->get();
+        $reservation = Reservation::with('doctor')->with('sick')->where('user_id', Auth::user()->id)->where('id', $id)->with('user')->get();
+        $company = Company::find($reservation[0]->user->company_id);
+        foreach ($reservation as $one) {
+
+            $one->setAttribute('company_name', $company->name);
+            $one->setAttribute('discount', $company->discount);
+        }
         return $this->returnData('reservation', $reservation);
     }
 }
