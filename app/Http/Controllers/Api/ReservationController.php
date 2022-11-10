@@ -63,6 +63,7 @@ class ReservationController extends Controller
 
             $one->setAttribute('company_name', $company->name);
             $one->setAttribute('discount', $company->discount);
+            $one->setAttribute('type', $company->type);
         }
         return $this->returnData('reservation', $reservation);
     }
